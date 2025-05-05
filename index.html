@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <title>Dobropost</title>
+  <link rel="icon" href="favicon.ico" type="image/x-icon">
+
+  <!-- Подключение внешнего стиля и шрифта -->
+  <link rel="stylesheet" href="style.css">
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600&display=swap" rel="stylesheet">
+</head>
+<body>
+  <div class="card">
+    <div class="form-block">
+      <h2>Калькулятор пошлины</h2>
+
+      <label for="priceYuan">Цена товара в юанях:</label>
+      <input type="number" id="priceYuan" placeholder="Например, 3100">
+
+      <button onclick="calculate()">Рассчитать</button>
+    </div>
+
+    <div class="image-block" id="imageBlock">
+      <img src="picture.png" alt="Иллюстрация">
+    </div>
+
+    <div class="result-text" id="resultText"></div>
+  </div>
+
+  <script>
+    async function calculate() {
+      const yuanPrice = parseFloat(document.getElementById('priceYuan').value);
+      const resultDiv = document.getElementById('resultText');
+      const imageBlock = document.getElementById('imageBlock');
+
+      if (isNaN(yuanPrice) || yuanPrice <= 0) {
+        resultDiv.innerHTML = 'Введите корректную цену в юанях.';
+        resultDiv.style.display = 'block';
+        imageBlock.style.display = 'none';
+        return;
+      }
+
+      try {
+        const res = await fetch('https://www.cbr-xml-daily.ru/daily_json.js');
+        const data = await res.json();
+
+        const cnyToRub = data.Valute.CNY.Value;
+        const eurToRub = data.Valute.EUR.Value;
+        const cnyToEur = cnyToRub / eurToRub;
+
+        const euroPrice = yuanPrice * cnyToEur;
+
+        if (euroPrice <= 200) {
+          resultDiv.innerHTML =
+            `Курс юаня: ${cnyToRub.toFixed(2)}₽\n` +
+            `Курс евро: ${eurToRub.toFixed(2)}₽\n` +
+            `Цена в евро: ${euroPrice.toFixed(2)}€\n\n` +
+            `<strong>Пошлину платить не нужно, товар не превышает лимит 200€.</strong>`;
+          resultDiv.style.display = 'block';
+          imageBlock.style.display = 'none';
+          return;
+        }
+
+        const excess = euroPrice - 200;
+        const dutyEur = excess * 0.15;
+        const dutyRub = dutyEur * eurToRub;
+
+        const adminFee = 500;
+        const commission = (dutyRub + adminFee) * 0.05;
+        const total = dutyRub + adminFee + commission;
+
+        const result =
+          `Курс юаня: ${cnyToRub.toFixed(2)}₽\n` +
+          `Курс евро: ${eurToRub.toFixed(2)}₽\n` +
+          `Цена в евро: ${euroPrice.toFixed(2)}€\n` +
+          `Превышение лимита: ${excess.toFixed(2)}€\n` +
+          `Пошлина: ${dutyRub.toFixed(2)}₽\n` +
+          `Админ. сбор: 500₽\n` +
+          `Комиссия: ${commission.toFixed(2)}₽\n\n` +
+          `<strong>ИТОГО: ${total.toFixed(2)}₽</strong>`;
+
+        resultDiv.innerHTML = result;
+        resultDiv.style.display = 'block';
+        imageBlock.style.display = 'none';
+
+      } catch (err) {
+        resultDiv.innerHTML = 'Ошибка при получении курсов валют.';
+        resultDiv.style.display = 'block';
+        imageBlock.style.display = 'none';
+        console.error(err);
+      }
+    }
+  </script>
+</body>
+</html>

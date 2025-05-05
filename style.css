@@ -1,0 +1,114 @@
+/* Общий стиль страницы */
+body {
+  font-family: 'Montserrat', sans-serif;
+  background-color: #f9fafb;
+  margin: 0;
+  padding: 40px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+  color: #2b2b2b;
+}
+
+/* Белая карточка */
+.card {
+  background: white;
+  padding: 40px;
+  border-radius: 16px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
+  display: flex;
+  gap: 40px;
+  align-items: flex-start;
+  flex-wrap: wrap;
+  max-width: 900px;
+  width: 100%;
+}
+
+/* Левая часть: форма */
+.form-block {
+  flex: 1;
+  min-width: 250px;
+}
+
+h2 {
+  font-size: 28px;
+  font-weight: 600;
+  margin-bottom: 20px;
+  color: #1f2937;
+}
+
+label {
+  display: block;
+  margin-bottom: 10px;
+  font-weight: 500;
+  font-size: 18px;
+}
+
+input[type="number"] {
+  width: 100%;
+  padding: 12px 16px;
+  font-size: 18px;
+  border: 1px solid #d1d5db;
+  border-radius: 12px;
+  margin-bottom: 20px;
+  transition: border-color 0.3s ease;
+  box-sizing: border-box;
+  font-family: 'Montserrat', sans-serif;
+}
+
+input[type="number"]:focus {
+  border-color: #6366f1;
+  outline: none;
+}
+
+/* Кнопка "Рассчитать" в стиле оригинала */
+button {
+  background: #fdbd40;
+  border: none;
+  border-radius: 6px;
+  color: #1d2b37;
+  font-family: 'Montserrat', sans-serif;
+  font-size: 18px;
+  font-weight: 600;
+  height: 53px;
+  line-height: 23.4px;
+  padding: 14px;
+  text-align: center;
+  width: 100%;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+button:hover {
+  background-color: #f59e0b;
+}
+
+/* Правая часть: картинка или расчёт */
+.image-block,
+.result-text {
+  flex: 1;
+  max-width: 400px;
+  min-width: 250px;
+}
+
+.image-block img {
+  width: 100%;
+  border-radius: 12px;
+}
+
+/* Текст расчёта */
+.result-text {
+  background-color: #f3f4f6;
+  padding: 20px;
+  border-radius: 12px;
+  font-size: 17px;
+  line-height: 1.6;
+  display: none;
+  white-space: pre-wrap;
+  word-wrap: break-word;
+}
+
+.result-text strong {
+  font-weight: bold;
+}
